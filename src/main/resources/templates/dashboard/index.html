@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layouts/main :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div id="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Dashboard</h1>
+            <div class="text-muted">
+                Welcome back, <span sec:authentication="name" class="fw-bold"></span>!
+            </div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'SALES')">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Customers</div>
+                                <div class="h3">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/customers}" class="text-white text-decoration-none">
+                            View all <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'INVENTORY')">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Products</div>
+                                <div class="h3">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-box fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/products}" class="text-white text-decoration-none">
+                            View all <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'SALES')">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Sales Orders</div>
+                                <div class="h3">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-shopping-cart fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/sales/orders}" class="text-white text-decoration-none">
+                            View all <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'FINANCE')">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Revenue</div>
+                                <div class="h3">$0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-dollar-sign fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/finance/reports}" class="text-white text-decoration-none">
+                            View reports <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'SALES')">
+                                <a th:href="@{/customers/new}" class="btn btn-outline-primary w-100 mb-2">
+                                    <i class="fas fa-user-plus d-block mb-1"></i>
+                                    New Customer
+                                </a>
+                            </div>
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'INVENTORY')">
+                                <a th:href="@{/products/new}" class="btn btn-outline-success w-100 mb-2">
+                                    <i class="fas fa-plus d-block mb-1"></i>
+                                    New Product
+                                </a>
+                            </div>
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'SALES')">
+                                <a th:href="@{/sales/orders/new}" class="btn btn-outline-info w-100 mb-2">
+                                    <i class="fas fa-shopping-cart d-block mb-1"></i>
+                                    New Sales Order
+                                </a>
+                            </div>
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PURCHASE')">
+                                <a th:href="@{/purchase/orders/new}" class="btn btn-outline-warning w-100 mb-2">
+                                    <i class="fas fa-shopping-bag d-block mb-1"></i>
+                                    New Purchase Order
+                                </a>
+                            </div>
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'FINANCE')">
+                                <a th:href="@{/finance/invoices/new}" class="btn btn-outline-secondary w-100 mb-2">
+                                    <i class="fas fa-file-invoice d-block mb-1"></i>
+                                    New Invoice
+                                </a>
+                            </div>
+                            <div class="col-md-2" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                                <a th:href="@{/reports}" class="btn btn-outline-dark w-100 mb-2">
+                                    <i class="fas fa-chart-bar d-block mb-1"></i>
+                                    View Reports
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activities -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Sales Orders</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <p>No recent sales orders</p>
+                            <a th:href="@{/sales/orders}" class="btn btn-sm btn-primary">View All Orders</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Low Stock Alerts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                            <p>No low stock alerts</p>
+                            <a th:href="@{/inventory}" class="btn btn-sm btn-warning">View Inventory</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
