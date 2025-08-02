@@ -48,14 +48,23 @@ public class HomeController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, Authentication authentication) {
-        model.addAttribute("username", authentication.getName());
-        model.addAttribute("roles", authentication.getAuthorities());
-        
-        // Add comprehensive dashboard metrics
-        addDashboardMetrics(model);
-        
-        return "dashboard/index";
+    public String dashboard(Authentication authentication) {
+        if (authentication != null && authentication.getAuthorities() != null) {
+            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                return "redirect:/admin/dashboard";
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
+                return "redirect:/manager/dashboard";
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SALES"))) {
+                return "redirect:/sales/dashboard";
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PURCHASE"))) {
+                return "redirect:/purchase/dashboard";
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_INVENTORY"))) {
+                return "redirect:/inventory/dashboard";
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_FINANCE"))) {
+                return "redirect:/finance/dashboard";
+            }
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/admin/dashboard")
@@ -163,7 +172,15 @@ public class HomeController {
             model.addAttribute("totalProducts", 0L);
             model.addAttribute("totalRevenue", BigDecimal.ZERO);
             model.addAttribute("pendingAmount", BigDecimal.ZERO);
+            model.addAttribute("totalInvoices", 0L);
+            model.addAttribute("totalPayments", 0L);
+            model.addAttribute("totalSalesOrders", 0L);
+            model.addAttribute("totalPurchaseOrders", 0L);
             model.addAttribute("lowStockItems", 0L);
+            model.addAttribute("inventoryItems", 0);
+            model.addAttribute("recentInvoices", java.util.Collections.emptyList());
+            model.addAttribute("recentPayments", java.util.Collections.emptyList());
+            model.addAttribute("dashboardCards", new java.util.HashMap<>());
         }
     }
 }

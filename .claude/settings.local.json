@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote get-url:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote set-url:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote remove:*)",
+      "Bash(mvn clean:*)",
+      "Bash(mvn:*)",
+      "Bash(del nul)",
+      "Bash(rm:*)",
+      "Bash(taskkill:*)"
+    ],
+    "deny": []
+  }
+}
