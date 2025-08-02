@@ -37,7 +37,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i FROM Invoice i WHERE i.active = true ORDER BY i.invoiceDate DESC")
     List<Invoice> findAllActiveOrderByInvoiceDateDesc();
     
-    @Query("SELECT i FROM Invoice i WHERE i.active = true ORDER BY i.createdAt DESC")
+    @Query("SELECT i FROM Invoice i WHERE i.active = true ORDER BY i.invoiceDate DESC")
     List<Invoice> findTop10ByOrderByCreatedAtDesc();
     
     @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE i.active = true AND i.status = 'PAID'")

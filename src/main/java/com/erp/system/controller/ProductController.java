@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequestMapping("/products")
@@ -32,38 +33,54 @@ public class ProductController {
     private InventoryService inventoryService;
 
     @GetMapping
-    public String listProducts(Model model, @RequestParam(required = false) String search,
-                              @RequestParam(required = false) Long categoryId) {
+    public String listProducts(Model model, 
+                              @RequestParam(required = false) String search,
+                              @RequestParam(required = false) Long category,
+                              @RequestParam(required = false) String status) {
         List<Product> products;
         
+        // Apply filters
         if (search != null && !search.trim().isEmpty()) {
             products = productService.searchProducts(search);
-            model.addAttribute("search", search);
-        } else if (categoryId != null) {
-            products = productService.findByCategory(categoryId);
-            model.addAttribute("selectedCategoryId", categoryId);
+        } else if (category != null) {
+            products = productService.findByCategory(category);
         } else {
-            products = productService.findAllActiveOrderByName();
+            products = productService.findAll();
         }
         
-        // Add stock information
-        Map<Long, Integer> stockMap = new HashMap<>();
+        // Filter by status
+        if ("active".equals(status)) {
+            products = products.stream().filter(p -> p.getActive() != null && p.getActive()).toList();
+        } else if ("inactive".equals(status)) {
+            products = products.stream().filter(p -> p.getActive() == null || !p.getActive()).toList();
+        }
+        
+        // Add current stock information for each product
+        Map<Long, Integer> currentStocks = new HashMap<>();
         for (Product product : products) {
-            stockMap.put(product.getId(), inventoryService.getCurrentStock(product.getId()));
+            currentStocks.put(product.getId(), inventoryService.getCurrentStock(product.getId()));
         }
         
         model.addAttribute("products", products);
-        model.addAttribute("stockMap", stockMap);
-        model.addAttribute("categories", categoryService.findAllActiveOrderByName());
+        model.addAttribute("currentStocks", currentStocks);
+        model.addAttribute("categories", categoryService.findAll());
+        
+        // Preserve search parameters
+        model.addAttribute("param", Map.of(
+            "search", search != null ? search : "",
+            "category", category != null ? category.toString() : "",
+            "status", status != null ? status : ""
+        ));
+        
         return "products/list";
     }
 
     @GetMapping("/new")
     public String newProductForm(Model model) {
         Product product = new Product();
-        product.setProductCode(productService.generateProductCode());
+        product.setActive(true); // Default to active
         model.addAttribute("product", product);
-        model.addAttribute("categories", categoryService.findAllActiveOrderByName());
+        model.addAttribute("categories", categoryService.findAll());
         return "products/form";
     }
 
@@ -84,7 +101,7 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             model.addAttribute("product", product.get());
-            model.addAttribute("categories", categoryService.findAllActiveOrderByName());
+            model.addAttribute("categories", categoryService.findAll());
             return "products/form";
         }
         return "redirect:/products";
@@ -94,16 +111,16 @@ public class ProductController {
     public String saveProduct(@Valid @ModelAttribute Product product, BindingResult result, 
                             Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            model.addAttribute("categories", categoryService.findAllActiveOrderByName());
+            model.addAttribute("categories", categoryService.findAll());
             return "products/form";
         }
 
         try {
             if (product.getId() == null) {
-                productService.createProduct(product);
+                productService.save(product);
                 redirectAttributes.addFlashAttribute("success", "Product created successfully!");
             } else {
-                productService.updateProduct(product.getId(), product);
+                productService.save(product);
                 redirectAttributes.addFlashAttribute("success", "Product updated successfully!");
             }
         } catch (Exception e) {

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{layouts/main :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Product Form</title>
+</head>
+<body>
+    <div id="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 th:text="${product.id != null ? 'Edit Product' : 'New Product'}">Product Form</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/products}">Products</a></li>
+                    <li class="breadcrumb-item active" th:text="${product.id != null ? 'Edit' : 'New'}">Form</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Product Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/products}" th:object="${product}" method="post">
+                            <input type="hidden" th:field="*{id}">
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{name}" 
+                                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                           required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                        Name error
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{sku}" 
+                                           th:classappend="${#fields.hasErrors('sku')} ? 'is-invalid' : ''"
+                                           placeholder="e.g., PROD-001" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}">
+                                        SKU error
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select class="form-select" th:field="*{category.id}">
+                                        <option value="">Select Category</option>
+                                        <option th:each="category : ${categories}" 
+                                                th:value="${category.id}" 
+                                                th:text="${category.name}">Category</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="text" class="form-control" th:field="*{unit}" 
+                                           placeholder="e.g., pcs, kg, liters">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" th:field="*{description}" rows="3" 
+                                          placeholder="Product description..."></textarea>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="costPrice" class="form-label">Cost Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" class="form-control" th:field="*{costPrice}" 
+                                               placeholder="0.00">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="sellingPrice" class="form-label">Selling Price <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="0.01" class="form-control" th:field="*{sellingPrice}" 
+                                               th:classappend="${#fields.hasErrors('sellingPrice')} ? 'is-invalid' : ''"
+                                               placeholder="0.00" required>
+                                    </div>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('sellingPrice')}" th:errors="*{sellingPrice}">
+                                        Price error
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="taxRate" class="form-label">Tax Rate (%)</label>
+                                    <input type="number" step="0.01" class="form-control" th:field="*{taxRate}" 
+                                           placeholder="0.00" min="0" max="100">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="minStockLevel" class="form-label">Minimum Stock Level</label>
+                                    <input type="number" class="form-control" th:field="*{minStockLevel}" 
+                                           placeholder="10" min="0">
+                                    <small class="form-text text-muted">Alert when stock falls below this level</small>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="maxStockLevel" class="form-label">Maximum Stock Level</label>
+                                    <input type="number" class="form-control" th:field="*{maxStockLevel}" 
+                                           placeholder="100" min="0">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="barcode" class="form-label">Barcode</label>
+                                    <input type="text" class="form-control" th:field="*{barcode}" 
+                                           placeholder="123456789012">
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="weight" class="form-label">Weight (kg)</label>
+                                    <input type="number" step="0.001" class="form-control" th:field="*{weight}" 
+                                           placeholder="0.000">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" th:field="*{active}" id="active">
+                                    <label class="form-check-label" for="active">
+                                        Active Product
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/products}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Back to List
+                                </a>
+                                <div>
+                                    <button type="reset" class="btn btn-outline-secondary me-2">
+                                        <i class="fas fa-undo me-1"></i>Reset
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i>Save Product
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Additional Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3" th:if="${product.id != null}">
+                            <label class="form-label">Created Date</label>
+                            <p class="form-control-plaintext" th:text="${#temporals.format(product.createdDate, 'yyyy-MM-dd HH:mm')}">-</p>
+                        </div>
+                        
+                        <div class="mb-3" th:if="${product.id != null}">
+                            <label class="form-label">Last Modified</label>
+                            <p class="form-control-plaintext" th:text="${#temporals.format(product.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">-</p>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Tips:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>SKU must be unique</li>
+                                <li>Set minimum stock for alerts</li>
+                                <li>Use proper categories for organization</li>
+                                <li>Include accurate cost and selling prices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

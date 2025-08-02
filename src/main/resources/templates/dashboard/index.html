@@ -22,7 +22,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <div class="card-title h5">Customers</div>
-                                <div class="h3">0</div>
+                                <div class="h3" th:text="${totalCustomers}">0</div>
                             </div>
                             <div class="align-self-start">
                                 <i class="fas fa-users fa-2x"></i>
@@ -43,10 +43,10 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <div class="card-title h5">Products</div>
-                                <div class="h3">0</div>
+                                <div class="h3" th:text="${totalProducts}">0</div>
                             </div>
                             <div class="align-self-start">
-                                <i class="fas fa-box fa-2x"></i>
+                                <i class="fas fa-boxes fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -63,8 +63,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <div class="card-title h5">Sales Orders</div>
-                                <div class="h3">0</div>
+                                <div class="card-title h5">Total Orders</div>
+                                <div class="h3" th:text="${totalSalesOrders + totalPurchaseOrders}">0</div>
                             </div>
                             <div class="align-self-start">
                                 <i class="fas fa-shopping-cart fa-2x"></i>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#" th:href="@{/sales/orders}" class="text-white text-decoration-none">
+                        <a href="#" th:href="@{/sales}" class="text-white text-decoration-none">
                             View all <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -85,7 +85,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <div class="card-title h5">Revenue</div>
-                                <div class="h3">$0</div>
+                                <div class="h3">$<span th:text="${#numbers.formatDecimal(totalRevenue, 0, 2)}">0.00</span></div>
                             </div>
                             <div class="align-self-start">
                                 <i class="fas fa-dollar-sign fa-2x"></i>
@@ -93,8 +93,95 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#" th:href="@{/finance/reports}" class="text-white text-decoration-none">
-                            View reports <i class="fas fa-arrow-right"></i>
+                        <a href="#" th:href="@{/finance}" class="text-white text-decoration-none">
+                            View details <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Metrics Row -->
+        <div class="row mb-4">
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'PURCHASE')">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Suppliers</div>
+                                <div class="h3" th:text="${totalSuppliers}">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-truck fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/suppliers}" class="text-white text-decoration-none">
+                            View all <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'FINANCE')">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Pending Amount</div>
+                                <div class="h3">$<span th:text="${#numbers.formatDecimal(pendingAmount, 0, 2)}">0.00</span></div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/finance/invoices}" class="text-white text-decoration-none">
+                            View invoices <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'INVENTORY')">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Low Stock Items</div>
+                                <div class="h3" th:text="${lowStockItems}">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/inventory}" class="text-white text-decoration-none">
+                            Check inventory <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                <div class="card text-white bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="card-title h5">Total Invoices</div>
+                                <div class="h3" th:text="${totalInvoices}">0</div>
+                            </div>
+                            <div class="align-self-start">
+                                <i class="fas fa-file-invoice fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" th:href="@{/finance/invoices}" class="text-white text-decoration-none">
+                            View all <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -154,31 +241,143 @@
         
         <!-- Recent Activities -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'FINANCE')">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Recent Sales Orders</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recent Invoices</h5>
+                        <a th:href="@{/finance/invoices}" class="btn btn-sm btn-outline-primary">View All</a>
                     </div>
                     <div class="card-body">
-                        <div class="text-center text-muted py-4">
-                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
-                            <p>No recent sales orders</p>
-                            <a th:href="@{/sales/orders}" class="btn btn-sm btn-primary">View All Orders</a>
+                        <div th:if="${recentInvoices != null and !recentInvoices.empty}">
+                            <div class="list-group list-group-flush">
+                                <div th:each="invoice, iterStat : ${recentInvoices}" 
+                                     th:if="${iterStat.index < 5}"
+                                     class="list-group-item d-flex justify-content-between align-items-center border-0">
+                                    <div>
+                                        <strong th:text="${invoice.invoiceNumber}">INV-001</strong>
+                                        <br>
+                                        <small class="text-muted" th:text="${invoice.customer?.companyName}">Customer Name</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold">$<span th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 2)}">0.00</span></div>
+                                        <small class="text-muted" th:text="${#temporals.format(invoice.invoiceDate, 'MMM dd')}">Jan 01</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:unless="${recentInvoices != null and !recentInvoices.empty}" class="text-center text-muted py-4">
+                            <i class="fas fa-file-invoice fa-3x mb-3"></i>
+                            <p>No recent invoices</p>
+                            <a th:href="@{/finance/invoices/new}" class="btn btn-sm btn-primary">Create Invoice</a>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6">
+            <div class="col-md-6" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'FINANCE')">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Low Stock Alerts</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recent Payments</h5>
+                        <a th:href="@{/finance/payments}" class="btn btn-sm btn-outline-success">View All</a>
                     </div>
                     <div class="card-body">
-                        <div class="text-center text-muted py-4">
-                            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                            <p>No low stock alerts</p>
-                            <a th:href="@{/inventory}" class="btn btn-sm btn-warning">View Inventory</a>
+                        <div th:if="${recentPayments != null and !recentPayments.empty}">
+                            <div class="list-group list-group-flush">
+                                <div th:each="payment, iterStat : ${recentPayments}" 
+                                     th:if="${iterStat.index < 5}"
+                                     class="list-group-item d-flex justify-content-between align-items-center border-0">
+                                    <div>
+                                        <strong th:text="${payment.paymentNumber}">PAY-001</strong>
+                                        <br>
+                                        <small class="text-muted" th:text="${payment.customer?.companyName}">Customer Name</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-success">$<span th:text="${#numbers.formatDecimal(payment.amount, 0, 2)}">0.00</span></div>
+                                        <small class="text-muted" th:text="${#temporals.format(payment.paymentDate, 'MMM dd')}">Jan 01</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:unless="${recentPayments != null and !recentPayments.empty}" class="text-center text-muted py-4">
+                            <i class="fas fa-money-check-alt fa-3x mb-3"></i>
+                            <p>No recent payments</p>
+                            <a th:href="@{/finance/payments/new}" class="btn btn-sm btn-success">Record Payment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6" sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'INVENTORY')">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Inventory Status</h5>
+                        <a th:href="@{/inventory}" class="btn btn-sm btn-outline-warning">View Inventory</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="card border-success">
+                                    <div class="card-body p-2">
+                                        <h4 class="text-success" th:text="${inventoryItems - lowStockItems}">0</h4>
+                                        <small class="text-muted">In Stock</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card border-danger">
+                                    <div class="card-body p-2">
+                                        <h4 class="text-danger" th:text="${lowStockItems}">0</h4>
+                                        <small class="text-muted">Low Stock</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card border-primary">
+                                    <div class="card-body p-2">
+                                        <h4 class="text-primary" th:text="${inventoryItems}">0</h4>
+                                        <small class="text-muted">Total Items</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${lowStockItems > 0}" class="mt-3">
+                            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <div>
+                                    <strong th:text="${lowStockItems}">0</strong> items are running low on stock!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">System Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 text-center border-end">
+                                <h4 th:text="${totalSalesOrders}" class="text-info">0</h4>
+                                <small class="text-muted">Sales Orders</small>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4 th:text="${totalPurchaseOrders}" class="text-warning">0</h4>
+                                <small class="text-muted">Purchase Orders</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6 text-center border-end">
+                                <h4 th:text="${totalInvoices}" class="text-primary">0</h4>
+                                <small class="text-muted">Total Invoices</small>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4 th:text="${totalPayments}" class="text-success">0</h4>
+                                <small class="text-muted">Total Payments</small>
+                            </div>
                         </div>
                     </div>
                 </div>
