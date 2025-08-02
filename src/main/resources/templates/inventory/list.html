@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      th:replace="~{layouts/main :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Inventory</title>
+</head>
+<body>
+    <div id="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Inventory</h1>
+        </div>
+        
+        <!-- Inventory Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Inventory Levels</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${inventory.empty}" class="text-center py-4">
+                    <i class="fas fa-warehouse fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No inventory found</p>
+                </div>
+                
+                <div th:unless="${inventory.empty}">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Current Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${inventory}">
+                                    <td th:text="${item.product.name}">Product Name</td>
+                                    <td th:text="${item.stock}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

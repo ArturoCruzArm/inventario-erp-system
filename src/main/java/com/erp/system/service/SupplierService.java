@@ -80,4 +80,8 @@ public class SupplierService {
         long count = supplierRepository.count();
         return "SUPP" + String.format("%06d", count + 1);
     }
+
+    public void deleteById(Long id) {
+        deleteSupplier(id);
+    }
 }

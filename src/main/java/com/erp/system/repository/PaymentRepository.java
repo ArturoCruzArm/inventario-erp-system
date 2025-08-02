@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     
     @Query("SELECT p FROM Payment p WHERE p.active = true ORDER BY p.paymentDate DESC")
     List<Payment> findAllActiveOrderByPaymentDateDesc();
+    
+    @Query("SELECT p FROM Payment p WHERE p.active = true ORDER BY p.paymentDate DESC")
+    List<Payment> findTop10ByOrderByPaymentDateDesc();
 }

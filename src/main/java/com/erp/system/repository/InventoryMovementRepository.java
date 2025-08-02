@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface InventoryMovementRepository extends JpaRepository<InventoryMovement, Long> {
@@ -28,4 +29,7 @@ public interface InventoryMovementRepository extends JpaRepository<InventoryMove
     
     @Query("SELECT im FROM InventoryMovement im WHERE im.referenceNumber = :referenceNumber AND im.referenceType = :referenceType")
     List<InventoryMovement> findByReferenceNumberAndType(@Param("referenceNumber") String referenceNumber, @Param("referenceType") String referenceType);
+
+    @Query("SELECT new map(p as product, SUM(CASE WHEN im.movementType = 'IN' THEN im.quantity ELSE -im.quantity END) as stock) FROM InventoryMovement im JOIN im.product p GROUP BY p")
+    List<Map<String, Object>> getInventoryLevels();
 }

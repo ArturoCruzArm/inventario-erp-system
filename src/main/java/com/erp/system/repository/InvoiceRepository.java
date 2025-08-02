@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +36,13 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     
     @Query("SELECT i FROM Invoice i WHERE i.active = true ORDER BY i.invoiceDate DESC")
     List<Invoice> findAllActiveOrderByInvoiceDateDesc();
+    
+    @Query("SELECT i FROM Invoice i WHERE i.active = true ORDER BY i.createdAt DESC")
+    List<Invoice> findTop10ByOrderByCreatedAtDesc();
+    
+    @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE i.active = true AND i.status = 'PAID'")
+    BigDecimal getTotalRevenue();
+    
+    @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE i.active = true AND i.status = 'PENDING'")
+    BigDecimal getPendingAmount();
 }
